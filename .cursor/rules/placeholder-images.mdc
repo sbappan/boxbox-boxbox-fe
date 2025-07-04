@@ -1,0 +1,6 @@
+---
+description: Rule to use placekitten.com for placeholder images in seed data.
+globs: **/seed.ts
+alwaysApply: false
+---
+- While creating placeholder images as a part of your seed data, use https://picsum.photos/200
