@@ -2,7 +2,7 @@
 
 ## 1. Introduction/Overview
 
-This document outlines the requirements for a new page dedicated to displaying and collecting user reviews for a specific Formula 1 Grand Prix race. The initial implementation will focus on creating a single page for the "Austrian Grand Prix 2025". The goal is to provide a simple and intuitive interface for users to read what others thought about the race and to share their own opinions and ratings.
+This document outlines the requirements for a new page dedicated to displaying and collecting user reviews for a specific FORMULA 1 Grand Prix race. The initial implementation will focus on creating a single page for the "Austrian Grand Prix 2025". The goal is to provide a simple and intuitive interface for users to read what others thought about the race and to share their own opinions and ratings.
 
 ## 2. Goals
 
