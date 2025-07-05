@@ -1,6 +1,5 @@
-import { useState } from "react";
+import type { ReactNode } from "react";
 import { authClient } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,15 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { AuthModal } from "@/components/auth/auth-modal";
-import { DashboardPage } from "./dashboard-page";
+import { useState } from "react";
 
-export function HomePage() {
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
+
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { data: session, isPending } = authClient.useSession();
-
-  const openAuthModal = () => setIsAuthModalOpen(true);
-  const closeAuthModal = () => setIsAuthModalOpen(false);
 
   // Show loading state while checking authentication
   if (isPending) {
@@ -38,11 +39,10 @@ export function HomePage() {
           <Card className="w-full max-w-md">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bold">
-                Welcome to BoxBox BoxBox
+                Authentication Required
               </CardTitle>
               <CardDescription className="text-base">
-                Your ultimate destination for Formula 1 Grand Prix reviews &
-                ratings
+                Please sign in to access Grand Prix reviews
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -53,8 +53,19 @@ export function HomePage() {
                 </p>
               </div>
               <div className="space-y-3">
-                <Button onClick={openAuthModal} className="w-full" size="lg">
-                  Sign In to Get Started
+                <Button
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="w-full"
+                  size="lg"
+                >
+                  Sign In to Continue
+                </Button>
+                <Button
+                  onClick={() => window.history.back()}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Go Back
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
                   Sign in with Google to access all features
@@ -64,13 +75,14 @@ export function HomePage() {
           </Card>
         </div>
 
-        <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+        />
       </>
     );
   }
 
-  // Show main app content if authenticated
-  return <DashboardPage />;
+  // Render protected content if authenticated
+  return <>{children}</>;
 }
-
-export default HomePage;

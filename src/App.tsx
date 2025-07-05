@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from "./components/home-page";
 import { Header } from "./components/layout/header";
 import { Footer } from "./components/layout/footer";
+import { ProtectedRoute } from "./components/protected-route";
 import GrandPrixReviewPage from "./components/grand-prix-review-page";
 
 function App() {
@@ -12,7 +13,14 @@ function App() {
         <main className="flex-1 py-8">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/race/:raceId" element={<GrandPrixReviewPage />} />
+            <Route
+              path="/race/:raceId"
+              element={
+                <ProtectedRoute>
+                  <GrandPrixReviewPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
         <Footer />

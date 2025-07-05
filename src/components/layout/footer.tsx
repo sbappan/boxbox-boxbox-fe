@@ -11,7 +11,7 @@ export function Footer() {
               <Logo /> BoxBox BoxBox
             </h3>
             <p className="text-sm text-muted-foreground">
-              Your 2 second pit stop for FORMULA 1 Grand Prix reviews.
+              Your ultimate destination for FORMULA 1 Grand Prix reviews.
             </p>
           </div>
           <div className="space-y-4 col-span-2">
