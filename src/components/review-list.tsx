@@ -10,9 +10,11 @@ const ReviewList = ({ reviews }: ReviewListProps) => {
     <div>
       <h2 className="text-2xl font-semibold mb-4">Reviews</h2>
       <div className="space-y-4">
-        {reviews.map((review, index) => (
-          <ReviewListItem key={index} review={review} />
-        ))}
+        {reviews && reviews.length > 0
+          ? reviews.map((review, index) => (
+              <ReviewListItem key={index} review={review} />
+            ))
+          : "No reviews yet"}
       </div>
     </div>
   );

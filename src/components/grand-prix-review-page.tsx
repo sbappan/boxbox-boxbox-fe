@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import ReviewForm from "./review-form";
 import ReviewList from "./review-list";
-import { useCreateReview, useRaces } from "../lib/queries";
+import { useCreateReview, useRaces, useReviews } from "../lib/queries";
 import { mockReviews } from "../lib/mock-data";
 import type { Review } from "../lib/types";
 
@@ -15,14 +15,13 @@ const GrandPrixReviewPage = () => {
     : races?.find((race) => race.latestRace) || races?.[0];
   const currentRaceId = currentRace?.id;
 
-  // const {
-  //   data: reviews,
-  //   isLoading: reviewsLoading,
-  //   error,
-  // } = useReviews(currentRaceId);
-  const reviews = mockReviews;
-  const reviewsLoading = false;
-  const error = false;
+  const {
+    data: reviews,
+    isLoading: reviewsLoading,
+    error,
+  } = useReviews(currentRaceId);
+
+  console.log("reviews", reviews);
   const createReviewMutation = useCreateReview();
 
   const handleAddReview = (
@@ -81,8 +80,14 @@ const GrandPrixReviewPage = () => {
     console.error("Failed to fetch reviews:", error);
   }
 
-  // Use reviews from API or fallback to mock data if there's an error
-  const displayReviews = reviews || mockReviews;
+  // Use reviews from API or fallback to mock data if there's an error but only in development
+  const displayReviews =
+    reviews && reviews.length > 0
+      ? reviews
+      : process.env.NODE_ENV === "development" &&
+        import.meta.env.VITE_SHOW_MOCK_DATA === "true"
+      ? mockReviews
+      : [];
   const displayRaceName = currentRace?.name || "Austrian Grand Prix 2025";
 
   return (
