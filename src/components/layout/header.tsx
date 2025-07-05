@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { ModeToggle } from "../ui/mode-toggle";
 import { useRaces } from "@/lib/queries";
 import { Button } from "../ui/button";
@@ -28,51 +29,56 @@ export function Header() {
         <div className="container mx-auto flex h-14 max-w-2xl items-center justify-between px-4">
           <div className="flex items-center gap-4">
             <Logo />
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink
-                    href="#"
-                    className="font-bold px-3 py-2 rounded-md transition-all duration-200 hover:text-foreground hover:bg-accent/50"
-                  >
-                    Dashboard
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="px-3 py-2 text-foreground/60">
-                    2025
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="w-56 p-1">
-                      {isLoading && (
-                        <div className="px-3 py-1.5 text-sm text-muted-foreground">
-                          Loading races...
-                        </div>
-                      )}
-                      {isError && (
-                        <div className="px-3 py-1.5 text-sm text-destructive">
-                          Failed to load races
-                        </div>
-                      )}
-                      {races &&
-                        races.map((race) => (
-                          <NavigationMenuLink
-                            key={race.id}
-                            href={`#${race.id}`}
-                            className={`w-full flex flex-row justify-start items-center text-left px-3 py-1.5 rounded-md transition-all duration-200 text-sm ${
-                              race.latestRace
-                                ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                                : "hover:bg-accent/50"
-                            }`}
-                          >
-                            {race.name}
-                          </NavigationMenuLink>
-                        ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+            {session?.user ? (
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to="/"
+                        className="font-bold px-3 py-2 rounded-md transition-all duration-200 hover:text-foreground hover:bg-accent/50"
+                      >
+                        Dashboard
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="px-3 py-2 text-foreground/60">
+                      2025
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="w-56 p-1">
+                        {isLoading && (
+                          <div className="px-3 py-1.5 text-sm text-muted-foreground">
+                            Loading races...
+                          </div>
+                        )}
+                        {isError && (
+                          <div className="px-3 py-1.5 text-sm text-destructive">
+                            Failed to load races
+                          </div>
+                        )}
+                        {races &&
+                          races.map((race) => (
+                            <NavigationMenuLink key={race.id} asChild>
+                              <Link
+                                to={`/race/${race.id}`}
+                                className={`w-full flex flex-row justify-start items-center text-left px-3 py-1.5 rounded-md transition-all duration-200 text-sm ${
+                                  race.latestRace
+                                    ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                                    : "hover:bg-accent/50"
+                                }`}
+                              >
+                                {race.name}
+                              </Link>
+                            </NavigationMenuLink>
+                          ))}
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            ) : null}
           </div>
 
           <div className="flex items-center gap-2">

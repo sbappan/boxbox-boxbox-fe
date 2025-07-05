@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import logoPNG from "@/assets/images/Logo_BoxBox_BoxBox_64x64.png";
 import logoWEBP from "@/assets/images/Logo_BoxBox_BoxBox_64x64.webp";
 import logoPNGBig from "@/assets/images/Logo_BoxBox_BoxBox.png";
@@ -26,27 +27,31 @@ export function Logo() {
 
   if (isPageLoaded) {
     return (
+      <Link to="/" className="flex items-center">
+        <picture>
+          <source srcSet={logoWEBPBig} type="image/webp" />
+          <img
+            src={logoPNGBig}
+            alt="BoxBox BoxBox Logo"
+            className="h-10 w-auto"
+            fetchPriority="high"
+          />
+        </picture>
+      </Link>
+    );
+  }
+
+  return (
+    <Link to="/" className="flex items-center">
       <picture>
-        <source srcSet={logoWEBPBig} type="image/webp" />
+        <source srcSet={logoWEBP} type="image/webp" />
         <img
-          src={logoPNGBig}
+          src={logoPNG}
           alt="BoxBox BoxBox Logo"
           className="h-10 w-auto"
           fetchPriority="high"
         />
       </picture>
-    );
-  }
-
-  return (
-    <picture>
-      <source srcSet={logoWEBP} type="image/webp" />
-      <img
-        src={logoPNG}
-        alt="BoxBox BoxBox Logo"
-        className="h-10 w-auto"
-        fetchPriority="high"
-      />
-    </picture>
+    </Link>
   );
 }

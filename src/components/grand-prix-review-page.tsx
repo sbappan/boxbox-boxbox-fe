@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import ReviewForm from "./review-form";
 import ReviewList from "./review-list";
 import { useCreateReview, useRaces } from "../lib/queries";
@@ -5,10 +6,13 @@ import { mockReviews } from "../lib/mock-data";
 import type { Review } from "../lib/types";
 
 const GrandPrixReviewPage = () => {
+  const { raceId } = useParams<{ raceId: string }>();
   const { data: races, isLoading: racesLoading } = useRaces();
 
-  // Select the current race (latest race or first available)
-  const currentRace = races?.find((race) => race.latestRace) || races?.[0];
+  // Select the current race based on URL parameter or default to latest/first
+  const currentRace = raceId
+    ? races?.find((race) => race.id === raceId)
+    : races?.find((race) => race.latestRace) || races?.[0];
   const currentRaceId = currentRace?.id;
 
   // const {
@@ -52,6 +56,22 @@ const GrandPrixReviewPage = () => {
         <div className="flex justify-center items-center py-8">
           <p className="text-muted-foreground">Loading reviews...</p>
         </div>
+      </div>
+    );
+  }
+
+  // Show error state if race not found
+  if (raceId && !currentRace) {
+    return (
+      <div className="container mx-auto max-w-2xl p-4 space-y-8">
+        <header>
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
+            Race Not Found
+          </h1>
+          <p className="text-center text-muted-foreground mt-2">
+            The requested race could not be found.
+          </p>
+        </header>
       </div>
     );
   }
