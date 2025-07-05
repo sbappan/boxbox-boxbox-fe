@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { StarIcon } from "@/components/ui/star-icon";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { authClient } from "@/lib/auth-client";
 
 type ReviewFormProps = {
   onSubmit: (review: Omit<Review, "date" | "avatarUrl">) => void;

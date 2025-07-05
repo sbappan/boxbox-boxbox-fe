@@ -1,6 +1,6 @@
 import ReviewForm from "./review-form";
 import ReviewList from "./review-list";
-import { useReviews, useCreateReview, useRaces } from "../lib/queries";
+import { useCreateReview, useRaces } from "../lib/queries";
 import { mockReviews } from "../lib/mock-data";
 import type { Review } from "../lib/types";
 

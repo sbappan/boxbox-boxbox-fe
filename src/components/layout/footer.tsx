@@ -1,4 +1,5 @@
-import { Button } from "./ui/button";
+import { Logo } from "./logo";
+import { Button } from "../ui/button";
 
 export function Footer() {
   return (
@@ -6,8 +7,8 @@ export function Footer() {
       <div className="container mx-auto max-w-6xl px-4 py-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">
-              BoxBox BoxBox
+            <h3 className="text-lg font-semibold text-foreground flex flex-row items-center gap-2">
+              <Logo /> BoxBox BoxBox
             </h3>
             <p className="text-sm text-muted-foreground">
               Your 2 second pit stop for FORMULA 1 Grand Prix reviews.
