@@ -1,5 +1,7 @@
 import { Logo } from "./logo";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
+import { ExternalLinkIcon } from "lucide-react";
 
 export function Footer() {
   return (
@@ -32,8 +34,26 @@ export function Footer() {
           <div className="flex flex-col items-center space-y-2 text-sm text-muted-foreground md:flex-row md:space-y-0 md:space-x-4">
             <p>&copy; 2025 BoxBox BoxBox. All rights reserved.</p>
             <div className="flex space-x-4">
-              <FooterLinkButton>Privacy Policy</FooterLinkButton>
-              <FooterLinkButton>Terms of Service</FooterLinkButton>
+              <FooterLinkButton>
+                <Link
+                  to={import.meta.env.VITE_PRIVACY_POLICY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-row items-center gap-2"
+                >
+                  Privacy Policy <ExternalLinkIcon />
+                </Link>
+              </FooterLinkButton>
+              <FooterLinkButton>
+                <Link
+                  to={import.meta.env.VITE_TERMS_AND_CONDITIONS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-row items-center gap-2"
+                >
+                  Terms of Service <ExternalLinkIcon />
+                </Link>
+              </FooterLinkButton>
               {/* <FooterLinkButton>Contact</FooterLinkButton> */}
             </div>
           </div>
