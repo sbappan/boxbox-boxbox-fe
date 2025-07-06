@@ -6,18 +6,26 @@ import { StarIcon } from "@/components/ui/star-icon";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { authClient } from "@/lib/auth-client";
+import { useReviews } from "../lib/queries";
 
 type ReviewFormProps = {
   onSubmit: (review: Omit<Review, "date" | "avatarUrl">) => void;
   isSubmitting?: boolean;
+  raceId?: string;
 };
 
-const ReviewForm = ({ onSubmit, isSubmitting = false }: ReviewFormProps) => {
+const ReviewForm = ({
+  onSubmit,
+  isSubmitting = false,
+  raceId,
+}: ReviewFormProps) => {
   const { data: session } = authClient.useSession();
+  const { data: reviews } = useReviews(raceId);
 
   const [text, setText] = useState("");
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,8 +36,14 @@ const ReviewForm = ({ onSubmit, isSubmitting = false }: ReviewFormProps) => {
     onSubmit({ author: session.user.name, text, rating });
     // Reset form
     setText("");
-    setRating(5);
+    setRating(0);
+    setHasSubmitted(true);
   };
+
+  // Check if the current user already has a review for this race
+  const userHasReview = reviews?.some(
+    (review) => review.author === session?.user?.name
+  );
 
   if (!session?.user) {
     return (
@@ -40,6 +54,26 @@ const ReviewForm = ({ onSubmit, isSubmitting = false }: ReviewFormProps) => {
         <CardContent>
           <p className="text-muted-foreground">
             Please sign in to leave a review.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Don't show the form if the user already has a review
+  if (userHasReview) {
+    return null;
+  }
+
+  if (hasSubmitted) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Review Submitted!</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground mb-4">
+            Thank you for your review! It has been submitted successfully.
           </p>
         </CardContent>
       </Card>

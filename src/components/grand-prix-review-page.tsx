@@ -108,6 +108,7 @@ const GrandPrixReviewPage = () => {
       <ReviewForm
         onSubmit={handleAddReview}
         isSubmitting={createReviewMutation.isPending}
+        raceId={currentRaceId}
       />
       <ReviewList reviews={displayReviews} />
     </div>

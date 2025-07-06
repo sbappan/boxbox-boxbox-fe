@@ -1,6 +1,7 @@
 import React from "react";
 import type { Review } from "../lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatRelativeTime, formatHoverDate } from "@/lib/utils";
 
 type ReviewListItemProps = {
   review: Review;
@@ -34,8 +35,11 @@ const ReviewListItem = ({ review }: ReviewListItemProps) => {
         />
         <div className="flex-1">
           <CardTitle>{review.author}</CardTitle>
-          <p className="text-sm text-gray-500 dark:text-muted-foreground">
-            {review.date}
+          <p
+            className="text-sm text-gray-500 dark:text-muted-foreground cursor-help"
+            title={formatHoverDate(review.date)}
+          >
+            {formatRelativeTime(review.date)}
           </p>
         </div>
         <div className="flex items-center gap-1">
