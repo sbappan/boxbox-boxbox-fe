@@ -58,6 +58,44 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     }
   };
 
+  const handleTwitterSignIn = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      console.log("Attempting Twitter sign in...");
+      const result = await authClient.signIn.social({
+        provider: "twitter",
+        callbackURL: window.location.origin,
+      });
+
+      console.log("Twitter sign in result:", result);
+
+      if (result.error) {
+        console.error("Twitter sign in error:", result.error);
+        setError(
+          result.error.message ||
+            `Failed to sign in with Twitter: ${
+              result.error.status || "Unknown error"
+            }`
+        );
+      } else {
+        console.log("Twitter sign in successful");
+        onClose(); // Close modal on successful sign in
+        // The redirect will be handled by better-auth automatically
+      }
+    } catch (err) {
+      console.error("Twitter sign in exception:", err);
+      setError(
+        `An unexpected error occurred: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="relative max-h-[90vh] w-full max-w-md overflow-y-auto">
@@ -72,7 +110,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>
-              Sign in to your account using Google
+              Sign in to your account using Google or X (ex-Twitter)
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -107,6 +145,22 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   />
                 </svg>
                 {isLoading ? "Signing in..." : "Continue with Google"}
+              </Button>
+
+              <Button
+                onClick={handleTwitterSignIn}
+                disabled={isLoading}
+                className="w-full"
+                variant="outline"
+              >
+                <svg
+                  className="mr-2 h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                {isLoading ? "Signing in..." : "Continue with X"}
               </Button>
             </div>
           </CardContent>
