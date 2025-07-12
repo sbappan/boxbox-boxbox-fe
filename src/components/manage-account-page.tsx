@@ -31,6 +31,7 @@ export function ManageAccountPage() {
   const handleDeleteAccount = async () => {
     try {
       await deleteAccountMutation.mutateAsync(session.user.id);
+      await authClient.signOut();
       navigate("/");
     } catch (error) {
       console.error("Failed to delete account:", error);
