@@ -5,6 +5,7 @@ import { Footer } from "./components/layout/footer";
 import { ProtectedRoute } from "./components/protected-route";
 import GrandPrixReviewPage from "./components/grand-prix-review-page";
 import { ManageAccountPage } from "./components/manage-account-page";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <Toaster />
       </div>
     </BrowserRouter>
   );
