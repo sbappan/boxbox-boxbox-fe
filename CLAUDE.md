@@ -75,6 +75,8 @@ This is a React + TypeScript frontend for a Formula 1 Grand Prix review applicat
 - Follow existing patterns for API integration with React Query
 - Tailwind classes for styling, avoid inline styles
 - Component variants should use CVA (class-variance-authority)
+- Use Tailwind v4 for styling
+- Utilize Shadcn UI for UI components
 
 ## Backend Integration
 
