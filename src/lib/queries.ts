@@ -18,10 +18,11 @@ export const queryKeys = {
 } as const;
 
 // Race queries
-export function useRaces() {
+export function useRaces(enabled = true) {
   return useQuery({
     queryKey: queryKeys.races,
     queryFn: fetchRaces,
+    enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

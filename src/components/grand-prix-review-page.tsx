@@ -7,7 +7,7 @@ import type { Review } from "../lib/types";
 
 const GrandPrixReviewPage = () => {
   const { raceId } = useParams<{ raceId: string }>();
-  const { data: races, isLoading: racesLoading } = useRaces();
+  const { data: races, isLoading: racesLoading } = useRaces(true);
 
   // Select the current race based on URL parameter or default to latest/first
   const currentRace = raceId

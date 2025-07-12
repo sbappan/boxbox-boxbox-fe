@@ -17,9 +17,9 @@ import {
 import { Logo } from "./logo";
 
 export function Header() {
-  const { data: races, isLoading, isError } = useRaces();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { data: session } = authClient.useSession();
+  const { data: races, isLoading, isError } = useRaces(!!session?.user);
   console.log("races", { races });
   console.log("session", { session });
 
