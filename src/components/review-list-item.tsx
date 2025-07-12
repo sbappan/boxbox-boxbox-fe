@@ -2,6 +2,9 @@ import React from "react";
 import type { Review } from "../lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatRelativeTime, formatHoverDate } from "@/lib/utils";
+import HeartIcon from "@/components/ui/heart-icon";
+import { useLikeReview } from "@/lib/queries";
+import { authClient } from "@/lib/auth-client";
 
 type ReviewListItemProps = {
   review: Review;
@@ -25,6 +28,18 @@ const StarIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const ReviewListItem = ({ review }: ReviewListItemProps) => {
+  const session = authClient.useSession();
+  const likeMutation = useLikeReview();
+
+  const handleLike = () => {
+    if (!session.data?.user || !review.id) return;
+    
+    likeMutation.mutate({
+      reviewId: review.id,
+      isLiked: review.isLikedByUser ?? false,
+    });
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center gap-4">
@@ -61,6 +76,18 @@ const ReviewListItem = ({ review }: ReviewListItemProps) => {
         <p className="text-gray-700 dark:text-muted-foreground">
           {review.text}
         </p>
+        {session.data?.user && review.id && (
+          <div className="flex justify-end items-center gap-2 mt-4">
+            <span className="text-sm text-gray-500 dark:text-muted-foreground min-w-[2ch] text-right">
+              {review.likeCount ?? 0}
+            </span>
+            <HeartIcon
+              filled={review.isLikedByUser ?? false}
+              onClick={handleLike}
+              className={likeMutation.isPending ? "opacity-50 cursor-not-allowed" : ""}
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

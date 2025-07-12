@@ -6,6 +6,8 @@ export type Review = {
   text: string;
   date: string;
   raceId?: string;
+  likeCount?: number;
+  isLikedByUser?: boolean;
 };
 
 export type Race = {

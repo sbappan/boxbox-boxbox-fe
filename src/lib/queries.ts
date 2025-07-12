@@ -7,6 +7,8 @@ import {
   createReview,
   updateReview,
   deleteReview,
+  likeReview,
+  unlikeReview,
 } from "./api";
 
 // Query keys for consistent caching
@@ -106,6 +108,76 @@ export function useDeleteReview() {
     },
     onError: (error) => {
       console.error("Failed to delete review:", error);
+    },
+  });
+}
+
+// Like/unlike mutations with optimistic updates
+export function useLikeReview() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ reviewId, isLiked }: { reviewId: string; isLiked: boolean }) => 
+      isLiked ? unlikeReview(reviewId) : likeReview(reviewId),
+    onMutate: async ({ reviewId, isLiked }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: queryKeys.reviews });
+
+      // Snapshot the previous value
+      const previousReviews = queryClient.getQueryData<Review[]>(queryKeys.reviews);
+
+      // Optimistically update the review
+      queryClient.setQueryData<Review[]>(queryKeys.reviews, (oldReviews) => {
+        if (!oldReviews) return oldReviews;
+        return oldReviews.map((review) => {
+          if (review.id === reviewId) {
+            return {
+              ...review,
+              likeCount: (review.likeCount ?? 0) + (isLiked ? -1 : 1),
+              isLikedByUser: !isLiked,
+            };
+          }
+          return review;
+        });
+      });
+
+      // Also update reviews by race if they exist
+      const allQueries = queryClient.getQueriesData<Review[]>({ 
+        queryKey: ["reviews"], 
+        exact: false 
+      });
+      
+      allQueries.forEach(([queryKey, data]) => {
+        if (data) {
+          queryClient.setQueryData<Review[]>(queryKey, (oldReviews) => {
+            if (!oldReviews) return oldReviews;
+            return oldReviews.map((review) => {
+              if (review.id === reviewId) {
+                return {
+                  ...review,
+                  likeCount: (review.likeCount ?? 0) + (isLiked ? -1 : 1),
+                  isLikedByUser: !isLiked,
+                };
+              }
+              return review;
+            });
+          });
+        }
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousReviews };
+    },
+    onError: (err, _, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousReviews) {
+        queryClient.setQueryData(queryKeys.reviews, context.previousReviews);
+      }
+      console.error("Failed to update like:", err);
+    },
+    onSettled: () => {
+      // Always refetch after error or success
+      queryClient.invalidateQueries({ queryKey: queryKeys.reviews });
     },
   });
 }

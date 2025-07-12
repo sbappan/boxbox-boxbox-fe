@@ -73,3 +73,15 @@ export async function deleteReview(reviewId: string): Promise<void> {
     method: "DELETE",
   });
 }
+
+export async function likeReview(reviewId: string): Promise<{ message: string; likeCount: number }> {
+  return apiRequest<{ message: string; likeCount: number }>(`/api/reviews/${reviewId}/like`, {
+    method: "POST",
+  });
+}
+
+export async function unlikeReview(reviewId: string): Promise<{ message: string; likeCount: number }> {
+  return apiRequest<{ message: string; likeCount: number }>(`/api/reviews/${reviewId}/like`, {
+    method: "DELETE",
+  });
+}
