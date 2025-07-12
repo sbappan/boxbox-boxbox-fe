@@ -10,9 +10,9 @@ npm run dev       # Start development server (Vite)
 npm run build     # Build for production (TypeScript check + Vite build)
 npm run lint      # Run ESLint
 npm run preview   # Preview production build locally
+npm run test       # Run Playwright tests
+npm run test:ui    # Run Playwright tests with UI mode
 ```
-
-**Note:** No test runner is configured yet. If tests are added, update this file with test commands.
 
 ## Architecture Overview
 
