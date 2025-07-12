@@ -91,7 +91,7 @@ export function DashboardPage() {
             Browse reviews from all Formula 1 races
           </p>
         </header>
-        <Alert variant="destructive">
+        <Alert variant="destructive" data-testid="error-alert">
           <AlertDescription>
             Failed to load reviews. Please try refreshing the page.
           </AlertDescription>

@@ -50,7 +50,7 @@ const ReviewListItem = ({ review, raceName }: ReviewListItemProps) => {
   };
 
   return (
-    <Card>
+    <Card data-testid="review-item">
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar className="w-12 h-12">
           <AvatarImage 
