@@ -14,6 +14,7 @@ export type Race = {
   id: string;
   name: string;
   latestRace?: boolean;
+  highlightsUrl?: string;
 };
 
 // Better Auth types

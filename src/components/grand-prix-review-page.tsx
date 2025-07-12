@@ -4,6 +4,9 @@ import ReviewList from "./review-list";
 import { useCreateReview, useRaces, useReviews } from "../lib/queries";
 import { mockReviews } from "../lib/mock-data";
 import type { Review } from "../lib/types";
+import { Button } from "./ui/button";
+import YouTubeIcon from "./ui/youtube-icon";
+import { ExternalLinkIcon } from "lucide-react";
 
 const GrandPrixReviewPage = () => {
   const { raceId } = useParams<{ raceId: string }>();
@@ -105,6 +108,24 @@ const GrandPrixReviewPage = () => {
           </p>
         )}
       </header>
+      {currentRace?.highlightsUrl && (
+        <div className="flex flex-col items-center gap-2 py-4">
+          <p className="text-muted-foreground text-sm">
+            Missed the race? Catch the race highlights.
+          </p>
+          <Button asChild variant="outline" size="default">
+            <a
+              href={currentRace.highlightsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+            >
+              <YouTubeIcon />
+              Watch Highlights <ExternalLinkIcon />
+            </a>
+          </Button>
+        </div>
+      )}
       <ReviewForm
         onSubmit={handleAddReview}
         isSubmitting={createReviewMutation.isPending}
