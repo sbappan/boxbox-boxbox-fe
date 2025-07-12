@@ -32,6 +32,8 @@ const ReviewListItem = ({ review }: ReviewListItemProps) => {
           src={review.avatarUrl}
           alt={review.author}
           className="w-12 h-12 rounded-full"
+          referrerPolicy="no-referrer"
+          crossOrigin="anonymous"
         />
         <div className="flex-1">
           <CardTitle>{review.author}</CardTitle>

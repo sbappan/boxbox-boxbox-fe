@@ -141,6 +141,8 @@ const ReviewForm = ({
                 }
                 alt={session.user.name}
                 className="w-12 h-12 rounded-full"
+                referrerPolicy="no-referrer"
+                crossOrigin="anonymous"
               />
               <div className="flex-1">
                 <CardTitle>{session.user.name}</CardTitle>
