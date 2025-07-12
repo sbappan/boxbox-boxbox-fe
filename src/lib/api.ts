@@ -85,3 +85,10 @@ export async function unlikeReview(reviewId: string): Promise<{ message: string;
     method: "DELETE",
   });
 }
+
+// User-related API functions
+export async function deleteAccount(userId: string): Promise<void> {
+  return apiRequest<void>(`/api/user/${userId}`, {
+    method: "DELETE",
+  });
+}

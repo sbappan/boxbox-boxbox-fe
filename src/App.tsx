@@ -4,6 +4,7 @@ import { Header } from "./components/layout/header";
 import { Footer } from "./components/layout/footer";
 import { ProtectedRoute } from "./components/protected-route";
 import GrandPrixReviewPage from "./components/grand-prix-review-page";
+import { ManageAccountPage } from "./components/manage-account-page";
 
 function App() {
   return (
@@ -18,6 +19,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <GrandPrixReviewPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/manage-account"
+              element={
+                <ProtectedRoute>
+                  <ManageAccountPage />
                 </ProtectedRoute>
               }
             />
