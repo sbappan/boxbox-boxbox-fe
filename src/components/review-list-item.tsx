@@ -1,13 +1,16 @@
 import React from "react";
 import type { Review } from "../lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { formatRelativeTime, formatHoverDate } from "@/lib/utils";
 import HeartIcon from "@/components/ui/heart-icon";
 import { useLikeReview } from "@/lib/queries";
 import { authClient } from "@/lib/auth-client";
+import { Link } from "react-router-dom";
 
 type ReviewListItemProps = {
   review: Review;
+  raceName?: string;
 };
 
 const StarIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -27,9 +30,15 @@ const StarIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const ReviewListItem = ({ review }: ReviewListItemProps) => {
+const ReviewListItem = ({ review, raceName }: ReviewListItemProps) => {
   const session = authClient.useSession();
   const likeMutation = useLikeReview();
+
+  // Validate review data
+  if (!review || !review.author) {
+    console.error('Invalid review data provided to ReviewListItem');
+    return null;
+  }
 
   const handleLike = () => {
     if (!session.data?.user || !review.id) return;
@@ -41,17 +50,29 @@ const ReviewListItem = ({ review }: ReviewListItemProps) => {
   };
 
   return (
-    <Card>
+    <Card data-testid="review-item">
       <CardHeader className="flex flex-row items-center gap-4">
-        <img
-          src={review.avatarUrl}
-          alt={review.author}
-          className="w-12 h-12 rounded-full"
-          referrerPolicy="no-referrer"
-          crossOrigin="anonymous"
-        />
+        <Avatar className="w-12 h-12">
+          <AvatarImage 
+            src={review.avatarUrl} 
+            alt={review.author}
+            referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
+          />
+          {/* When the author's name is missing, use X as the fallback. */}
+          {/* Why X? - x is unknown - math nerd joke */}
+          <AvatarFallback>{review.author?.charAt(0)?.toUpperCase() || 'X'}</AvatarFallback>
+        </Avatar>
         <div className="flex-1">
           <CardTitle>{review.author}</CardTitle>
+          {raceName && review.raceId && (
+            <Link 
+              to={`/race/${review.raceId}`} 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {raceName}
+            </Link>
+          )}
           <p
             className="text-sm text-gray-500 dark:text-muted-foreground cursor-help"
             title={formatHoverDate(review.date)}
