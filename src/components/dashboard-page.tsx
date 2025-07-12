@@ -20,11 +20,43 @@ export function DashboardPage() {
 
   // Combine reviews with race information and sort by date (newest first)
   const reviewsWithRaceInfo = useMemo(() => {
-    return reviews?.map((review) => ({
-      ...review,
-      raceName: review.raceId ? raceMap.get(review.raceId)?.name : undefined,
-    }))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) || [];
+    if (!reviews || reviews.length === 0) {
+      return [];
+    }
+
+    return reviews
+      .map((review) => {
+        let raceName: string | undefined;
+        
+        // Explicit null checks for better error handling
+        if (review.raceId && raceMap.has(review.raceId)) {
+          const race = raceMap.get(review.raceId);
+          if (race && race.name) {
+            raceName = race.name;
+          } else {
+            console.warn(`Race ${review.raceId} exists but has no name`);
+          }
+        } else if (review.raceId) {
+          console.warn(`Review references non-existent race: ${review.raceId}`);
+        }
+
+        return {
+          ...review,
+          raceName,
+        };
+      })
+      .sort((a, b) => {
+        // Ensure dates are valid before sorting
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        
+        if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+          console.warn('Invalid date found in reviews');
+          return 0;
+        }
+        
+        return dateB.getTime() - dateA.getTime();
+      });
   }, [reviews, raceMap]);
 
   const isLoading = reviewsLoading || racesLoading;

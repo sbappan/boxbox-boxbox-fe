@@ -34,6 +34,12 @@ const ReviewListItem = ({ review, raceName }: ReviewListItemProps) => {
   const session = authClient.useSession();
   const likeMutation = useLikeReview();
 
+  // Validate review data
+  if (!review || !review.author) {
+    console.error('Invalid review data provided to ReviewListItem');
+    return null;
+  }
+
   const handleLike = () => {
     if (!session.data?.user || !review.id) return;
     
@@ -53,7 +59,9 @@ const ReviewListItem = ({ review, raceName }: ReviewListItemProps) => {
             referrerPolicy="no-referrer"
             crossOrigin="anonymous"
           />
-          <AvatarFallback>{review.author[0]?.toUpperCase()}</AvatarFallback>
+          {/* When the author's name is missing, use X as the fallback. */}
+          {/* Why X? - x is unknown - math nerd joke */}
+          <AvatarFallback>{review.author?.charAt(0)?.toUpperCase() || 'X'}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <CardTitle>{review.author}</CardTitle>
