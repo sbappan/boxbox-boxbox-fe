@@ -88,7 +88,7 @@ export function DashboardPage() {
             All Reviews
           </h1>
           <p className="text-center text-muted-foreground mt-2">
-            Browse reviews from all Formula 1 races
+            Browse reviews from all FORMULA 1 races
           </p>
         </header>
         <Alert variant="destructive" data-testid="error-alert">
@@ -107,7 +107,7 @@ export function DashboardPage() {
           All Reviews
         </h1>
         <p className="text-center text-muted-foreground mt-2">
-          Browse reviews from all Formula 1 races
+          Browse reviews from all FORMULA 1 races
         </p>
       </header>
       

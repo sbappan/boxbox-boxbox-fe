@@ -68,7 +68,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
                   Go Back
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
-                  Sign in with Google to access all features
+                  Sign in to access all features
                 </p>
               </div>
             </CardContent>

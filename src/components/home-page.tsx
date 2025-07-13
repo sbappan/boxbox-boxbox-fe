@@ -41,7 +41,7 @@ export function HomePage() {
                 Welcome to BoxBox BoxBox
               </CardTitle>
               <CardDescription className="text-base">
-                Your ultimate destination for Formula 1 Grand Prix reviews &
+                Your ultimate destination for FORMULA 1 Grand Prix reviews &
                 ratings
               </CardDescription>
             </CardHeader>
@@ -57,7 +57,7 @@ export function HomePage() {
                   Sign In to Get Started
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
-                  Sign in with Google to access all features
+                  Sign in to access all features
                 </p>
               </div>
             </CardContent>
