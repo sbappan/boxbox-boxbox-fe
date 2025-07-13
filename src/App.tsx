@@ -8,6 +8,7 @@ import { ManageAccountPage } from "./components/manage-account-page";
 import { UserProfilePage } from "./components/user-profile-page";
 import { FollowersList } from "./components/followers-list";
 import { FollowingList } from "./components/following-list";
+import { FollowingFeed } from "./pages/FollowingFeed";
 import { Toaster } from "./components/ui/sonner";
 
 function App() {
@@ -55,6 +56,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <FollowingList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/following-feed"
+              element={
+                <ProtectedRoute>
+                  <FollowingFeed />
                 </ProtectedRoute>
               }
             />

@@ -19,8 +19,7 @@ export function UserProfile({ userId, onFollowersClick, onFollowingClick }: User
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-2xl px-4 py-8">
-        <Card>
+      <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className="h-16 w-16 bg-muted rounded-full animate-pulse" />
@@ -35,14 +34,12 @@ export function UserProfile({ userId, onFollowersClick, onFollowingClick }: User
             </div>
           </CardContent>
         </Card>
-      </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto max-w-2xl px-4 py-8">
-        <Card>
+      <Card>
           <CardContent className="p-6 text-center">
             <h3 className="text-lg font-medium text-muted-foreground">
               User not found
@@ -52,7 +49,6 @@ export function UserProfile({ userId, onFollowersClick, onFollowingClick }: User
             </p>
           </CardContent>
         </Card>
-      </div>
     );
   }
 
@@ -64,8 +60,7 @@ export function UserProfile({ userId, onFollowersClick, onFollowingClick }: User
   const isOwnProfile = session?.user?.id === userId;
 
   return (
-    <div className="container mx-auto max-w-2xl px-4 py-8">
-      <Card>
+    <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -101,22 +96,26 @@ export function UserProfile({ userId, onFollowersClick, onFollowingClick }: User
           <div className="grid grid-cols-2 gap-4">
             <Button
               variant="ghost"
-              className="flex flex-col items-center justify-center h-20 space-y-1 hover:bg-accent"
+              className="flex flex-col items-center justify-center h-20 space-y-1 hover:bg-accent hover:text-primary transition-colors"
               onClick={onFollowersClick}
+              title="View followers list"
             >
               <div className="text-2xl font-bold">{user.followerCount}</div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground group-hover:text-primary">
                 {user.followerCount === 1 ? 'Follower' : 'Followers'}
               </div>
             </Button>
 
             <Button
               variant="ghost"
-              className="flex flex-col items-center justify-center h-20 space-y-1 hover:bg-accent"
+              className="flex flex-col items-center justify-center h-20 space-y-1 hover:bg-accent hover:text-primary transition-colors"
               onClick={onFollowingClick}
+              title="View following list"
             >
               <div className="text-2xl font-bold">{user.followingCount}</div>
-              <div className="text-sm text-muted-foreground">Following</div>
+              <div className="text-sm text-muted-foreground group-hover:text-primary">
+                Following
+              </div>
             </Button>
           </div>
 
@@ -139,7 +138,6 @@ export function UserProfile({ userId, onFollowersClick, onFollowingClick }: User
             </div>
           )}
         </CardContent>
-      </Card>
-    </div>
+    </Card>
   );
 }

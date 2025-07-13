@@ -269,3 +269,104 @@ export async function fetchFollowing(userId: string, page = 1, limit = 20): Prom
     };
   }>(`/api/users/${userId}/following?${params}`);
 }
+
+export async function fetchUserSuggestions(limit = 10): Promise<{
+  suggestions: Array<{
+    id: string;
+    name: string;
+    image: string | null;
+    followerCount: number;
+    isFollowing: boolean;
+  }>;
+}> {
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    suggestions: Array<{
+      id: string;
+      name: string;
+      image: string | null;
+      followerCount: number;
+      isFollowing: boolean;
+    }>;
+  }>(`/api/users/suggestions?${params}`);
+}
+
+export async function fetchTopReviewers(limit = 10): Promise<{
+  topReviewers: Array<{
+    id: string;
+    name: string;
+    image: string | null;
+    followerCount: number;
+    reviewCount: number;
+    averageRating: number;
+    isFollowing: boolean;
+  }>;
+}> {
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    topReviewers: Array<{
+      id: string;
+      name: string;
+      image: string | null;
+      followerCount: number;
+      reviewCount: number;
+      averageRating: number;
+      isFollowing: boolean;
+    }>;
+  }>(`/api/users/top-reviewers?${params}`);
+}
+
+export async function fetchFollowingFeed(page = 1, limit = 20): Promise<{
+  reviews: Array<{
+    id: string;
+    author: string;
+    authorId: string;
+    avatarUrl: string;
+    rating: number;
+    text: string;
+    date: string;
+    raceId: string;
+    raceName?: string;
+    likeCount: number;
+    isLikedByUser: boolean;
+  }>;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+}> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    reviews: Array<{
+      id: string;
+      author: string;
+      authorId: string;
+      avatarUrl: string;
+      rating: number;
+      text: string;
+      date: string;
+      raceId: string;
+      raceName?: string;
+      likeCount: number;
+      isLikedByUser: boolean;
+    }>;
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      hasMore: boolean;
+    };
+  }>(`/api/feed/following?${params}`);
+}

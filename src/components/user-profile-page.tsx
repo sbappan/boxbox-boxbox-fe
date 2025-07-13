@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { UserProfile } from "@/components/user-profile";
+import { UserDiscovery } from "@/components/UserDiscovery";
 
 export function UserProfilePage() {
   const { userId } = useParams<{ userId: string }>();
@@ -25,10 +26,22 @@ export function UserProfilePage() {
   };
 
   return (
-    <UserProfile
-      userId={userId}
-      onFollowersClick={handleFollowersClick}
-      onFollowingClick={handleFollowingClick}
-    />
+    <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main profile content */}
+        <div className="lg:col-span-2">
+          <UserProfile
+            userId={userId}
+            onFollowersClick={handleFollowersClick}
+            onFollowingClick={handleFollowingClick}
+          />
+        </div>
+        
+        {/* Discovery sidebar */}
+        <div className="space-y-6">
+          <UserDiscovery limit={5} />
+        </div>
+      </div>
+    </div>
   );
 }

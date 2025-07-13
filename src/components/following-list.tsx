@@ -4,7 +4,7 @@ import { useFollowing } from "@/lib/queries";
 import { FollowButton } from "@/components/follow-button";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function FollowingList() {
@@ -102,8 +102,12 @@ export function FollowingList() {
       </div>
 
       {following.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Not following anyone yet.</p>
+        <div className="text-center py-12">
+          <UserPlus className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-muted-foreground mb-2">Not following anyone yet</h3>
+          <p className="text-sm text-muted-foreground/80 max-w-md mx-auto">
+            Start building your F1 community! Follow other users to see their reviews and stay connected with fellow racing enthusiasts.
+          </p>
         </div>
       ) : (
         <div className="space-y-4">

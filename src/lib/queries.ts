@@ -15,6 +15,9 @@ import {
   fetchUserProfile,
   fetchFollowers,
   fetchFollowing,
+  fetchUserSuggestions,
+  fetchTopReviewers,
+  fetchFollowingFeed,
 } from "./api";
 
 // Query keys for consistent caching
@@ -27,6 +30,9 @@ export const queryKeys = {
   users: ["users"] as const,
   followers: (userId: string, page: number) => ["followers", userId, page] as const,
   following: (userId: string, page: number) => ["following", userId, page] as const,
+  userSuggestions: ["userSuggestions"] as const,
+  topReviewers: ["topReviewers"] as const,
+  followingFeed: (page: number) => ["followingFeed", page] as const,
 } as const;
 
 // Race queries
@@ -376,5 +382,32 @@ export function useFollowing(userId: string, page = 1, limit = 20) {
     queryFn: () => fetchFollowing(userId, page, limit),
     enabled: !!userId,
     staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+}
+
+// User suggestions query
+export function useUserSuggestions(limit = 10) {
+  return useQuery({
+    queryKey: queryKeys.userSuggestions,
+    queryFn: () => fetchUserSuggestions(limit),
+    staleTime: 5 * 60 * 1000, // 5 minutes - suggestions don't change frequently
+  });
+}
+
+// Top reviewers query
+export function useTopReviewers(limit = 10) {
+  return useQuery({
+    queryKey: queryKeys.topReviewers,
+    queryFn: () => fetchTopReviewers(limit),
+    staleTime: 10 * 60 * 1000, // 10 minutes - leaderboard changes slowly
+  });
+}
+
+// Following feed query
+export function useFollowingFeed(page = 1, limit = 20) {
+  return useQuery({
+    queryKey: queryKeys.followingFeed(page),
+    queryFn: () => fetchFollowingFeed(page, limit),
+    staleTime: 2 * 60 * 1000, // 2 minutes - feed should be relatively fresh
   });
 }

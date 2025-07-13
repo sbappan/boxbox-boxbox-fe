@@ -4,7 +4,7 @@ import { useFollowers } from "@/lib/queries";
 import { FollowButton } from "@/components/follow-button";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, UserCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function FollowersList() {
@@ -102,8 +102,12 @@ export function FollowersList() {
       </div>
 
       {followers.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">No followers yet.</p>
+        <div className="text-center py-12">
+          <UserCheck className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-muted-foreground mb-2">No followers yet</h3>
+          <p className="text-sm text-muted-foreground/80 max-w-md mx-auto">
+            This user hasn't gained any followers yet. Share their profile with others or encourage them to write engaging reviews to build their following!
+          </p>
         </div>
       ) : (
         <div className="space-y-4">
