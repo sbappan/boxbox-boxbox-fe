@@ -89,6 +89,7 @@ export function ManageAccountPage() {
     setLastError(null);
     
     try {
+      // backend checks that only the logged in user can delete their own account
       await deleteAccountMutation.mutateAsync(session.user.id);
       toast.success("Account successfully deleted");
       
