@@ -139,6 +139,19 @@ export async function unlikeReview(reviewId: string): Promise<{ message: string;
 
 // User-related API functions
 export async function deleteAccount(userId: string): Promise<void> {
+  // Validate userId before making API call
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+  
+  if (typeof userId !== 'string') {
+    throw new Error("User ID must be a string");
+  }
+  
+  if (!userId.trim()) {
+    throw new Error("User ID cannot be empty or whitespace");
+  }
+
   return apiRequest<void>(`/api/user/${userId}`, {
     method: "DELETE",
   });
