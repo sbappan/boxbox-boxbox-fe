@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -13,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Calendar, Mail, RotateCcw } from "lucide-react";
+import { Calendar, Mail } from "lucide-react";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useDeleteAccount } from "@/lib/queries";
 import { format } from "date-fns";
@@ -212,26 +211,16 @@ export function ManageAccountPage() {
               Cancel
             </AlertDialogCancel>
             
-            {/* Show retry button for recoverable errors */}
-            {lastError?.isRecoverable && (
-              <Button
-                variant="outline"
-                onClick={handleDeleteAccount}
-                disabled={deleteAccountMutation.isPending}
-                className="mr-2"
-              >
-                <RotateCcw className="mr-2 h-4 w-4" />
-                {deleteAccountMutation.isPending ? "Retrying..." : "Retry"}
-              </Button>
-            )}
-            
-            <AlertDialogAction
+            <Button
+              variant="destructive"
               onClick={handleDeleteAccount}
               disabled={deleteAccountMutation.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleteAccountMutation.isPending ? "Deleting..." : "Delete Account"}
-            </AlertDialogAction>
+              {deleteAccountMutation.isPending 
+                ? (lastError?.isRecoverable ? "Retrying..." : "Deleting...")
+                : (lastError?.isRecoverable ? "Retry Deletion" : "Delete Account")
+              }
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
