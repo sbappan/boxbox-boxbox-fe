@@ -154,7 +154,10 @@ export function ManageAccountPage() {
             <div className="pt-4 border-t">
               <div className="flex items-center text-sm text-muted-foreground">
                 <Calendar className="mr-2 h-4 w-4" />
-                Member since {format(new Date(session.user.createdAt), "MMMM d, yyyy")}
+                Member since {session.user.createdAt ? 
+                  format(new Date(session.user.createdAt), "MMMM d, yyyy") : 
+                  "Unknown"
+                }
               </div>
             </div>
           </CardContent>
