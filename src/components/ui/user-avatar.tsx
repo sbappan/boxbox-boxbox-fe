@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface UserAvatarProps {
@@ -6,16 +7,16 @@ interface UserAvatarProps {
   className?: string;
 }
 
-export function UserAvatar({ 
+export const UserAvatar = React.memo(function UserAvatar({ 
   name, 
   image, 
   className
 }: UserAvatarProps) {
-  const getFallback = () => {
+  const fallback = useMemo(() => {
     // When the name is missing, use X as the fallback.
     // Why X? - x is unknown - math nerd joke
     return name?.charAt(0)?.toUpperCase() || 'X';
-  };
+  }, [name]);
 
   return (
     <Avatar className={className}>
@@ -27,7 +28,7 @@ export function UserAvatar({
           crossOrigin="anonymous"
         />
       )}
-      <AvatarFallback>{getFallback()}</AvatarFallback>
+      <AvatarFallback>{fallback}</AvatarFallback>
     </Avatar>
   );
-}
+});
