@@ -10,6 +10,11 @@ import {
   likeReview,
   unlikeReview,
   deleteAccount,
+  followUser,
+  unfollowUser,
+  fetchUserProfile,
+  fetchFollowers,
+  fetchFollowing,
 } from "./api";
 
 // Query keys for consistent caching
@@ -18,6 +23,10 @@ export const queryKeys = {
   race: (id: string) => ["races", id] as const,
   reviews: ["reviews"] as const,
   reviewsByRace: (raceId: string) => ["reviews", "race", raceId] as const,
+  user: (id: string) => ["user", id] as const,
+  users: ["users"] as const,
+  followers: (userId: string, page: number) => ["followers", userId, page] as const,
+  following: (userId: string, page: number) => ["following", userId, page] as const,
 } as const;
 
 // Race queries
@@ -196,5 +205,176 @@ export function useDeleteAccount() {
     onError: (error) => {
       console.error("Failed to delete account:", error);
     },
+  });
+}
+
+// Follow mutations
+export function useFollow() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ userId, isFollowing }: { userId: string; isFollowing: boolean }) =>
+      isFollowing ? unfollowUser(userId) : followUser(userId),
+    onMutate: async ({ userId, isFollowing }) => {
+      // Cancel any outgoing refetches for user profile
+      await queryClient.cancelQueries({ queryKey: queryKeys.user(userId) });
+
+      // Snapshot the previous value
+      const previousUserProfile = queryClient.getQueryData(queryKeys.user(userId));
+
+      // Optimistically update the user profile
+      queryClient.setQueryData(queryKeys.user(userId), (old: unknown) => {
+        if (!old || typeof old !== 'object' || !('user' in old)) return old;
+        const oldData = old as { user: { isFollowing: boolean; followerCount: number; [key: string]: unknown } };
+        return {
+          ...oldData,
+          user: {
+            ...oldData.user,
+            isFollowing: !isFollowing,
+            followerCount: oldData.user.followerCount + (isFollowing ? -1 : 1),
+          },
+        };
+      });
+
+      // Also optimistically update followers/following lists
+      const allFollowersQueries = queryClient.getQueriesData({ 
+        queryKey: ["followers"], 
+        exact: false 
+      });
+      
+      const allFollowingQueries = queryClient.getQueriesData({ 
+        queryKey: ["following"], 
+        exact: false 
+      });
+
+      // Update follow status in followers lists
+      allFollowersQueries.forEach(([queryKey, data]) => {
+        if (data && typeof data === 'object' && 'followers' in data) {
+          queryClient.setQueryData(queryKey, (old: unknown) => {
+            if (!old || typeof old !== 'object' || !('followers' in old)) return old;
+            const oldData = old as { followers: Array<{ id: string; isFollowing: boolean; [key: string]: unknown }> };
+            return {
+              ...oldData,
+              followers: oldData.followers.map((follower) => 
+                follower.id === userId 
+                  ? { ...follower, isFollowing: !isFollowing }
+                  : follower
+              ),
+            };
+          });
+        }
+      });
+
+      // Update follow status in following lists
+      allFollowingQueries.forEach(([queryKey, data]) => {
+        if (data && typeof data === 'object' && 'following' in data) {
+          queryClient.setQueryData(queryKey, (old: unknown) => {
+            if (!old || typeof old !== 'object' || !('following' in old)) return old;
+            const oldData = old as { following: Array<{ id: string; isFollowing: boolean; [key: string]: unknown }> };
+            return {
+              ...oldData,
+              following: oldData.following.map((following) => 
+                following.id === userId 
+                  ? { ...following, isFollowing: !isFollowing }
+                  : following
+              ),
+            };
+          });
+        }
+      });
+
+      // Return context for rollback
+      return { 
+        previousUserProfile,
+        userId,
+        wasFollowing: isFollowing,
+      };
+    },
+    onError: (err, _variables, context) => {
+      // Rollback optimistic update
+      if (context?.previousUserProfile) {
+        queryClient.setQueryData(queryKeys.user(context.userId), context.previousUserProfile);
+      }
+      
+      // Rollback followers/following list updates
+      const allFollowersQueries = queryClient.getQueriesData({ 
+        queryKey: ["followers"], 
+        exact: false 
+      });
+      
+      const allFollowingQueries = queryClient.getQueriesData({ 
+        queryKey: ["following"], 
+        exact: false 
+      });
+
+      // Revert follow status in followers lists
+      allFollowersQueries.forEach(([queryKey]) => {
+        queryClient.setQueryData(queryKey, (old: unknown) => {
+          if (!old || typeof old !== 'object' || !('followers' in old)) return old;
+          const oldData = old as { followers: Array<{ id: string; isFollowing: boolean; [key: string]: unknown }> };
+          return {
+            ...oldData,
+            followers: oldData.followers.map((follower) => 
+              follower.id === context?.userId 
+                ? { ...follower, isFollowing: context?.wasFollowing }
+                : follower
+            ),
+          };
+        });
+      });
+
+      // Revert follow status in following lists
+      allFollowingQueries.forEach(([queryKey]) => {
+        queryClient.setQueryData(queryKey, (old: unknown) => {
+          if (!old || typeof old !== 'object' || !('following' in old)) return old;
+          const oldData = old as { following: Array<{ id: string; isFollowing: boolean; [key: string]: unknown }> };
+          return {
+            ...oldData,
+            following: oldData.following.map((following) => 
+              following.id === context?.userId 
+                ? { ...following, isFollowing: context?.wasFollowing }
+                : following
+            ),
+          };
+        });
+      });
+
+      console.error("Failed to update follow status:", err);
+    },
+    onSettled: (_data, _error, variables) => {
+      // Always refetch after error or success to ensure consistency
+      queryClient.invalidateQueries({ queryKey: queryKeys.user(variables.userId) });
+      queryClient.invalidateQueries({ queryKey: ["followers"] });
+      queryClient.invalidateQueries({ queryKey: ["following"] });
+    },
+  });
+}
+
+// User profile query
+export function useUserProfile(userId: string) {
+  return useQuery({
+    queryKey: queryKeys.user(userId),
+    queryFn: () => fetchUserProfile(userId),
+    enabled: !!userId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+}
+
+// Followers and following queries
+export function useFollowers(userId: string, page = 1, limit = 20) {
+  return useQuery({
+    queryKey: queryKeys.followers(userId, page),
+    queryFn: () => fetchFollowers(userId, page, limit),
+    enabled: !!userId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+}
+
+export function useFollowing(userId: string, page = 1, limit = 20) {
+  return useQuery({
+    queryKey: queryKeys.following(userId, page),
+    queryFn: () => fetchFollowing(userId, page, limit),
+    enabled: !!userId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }

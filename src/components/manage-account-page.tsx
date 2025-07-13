@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Calendar, Mail } from "lucide-react";
 import { UserAvatar } from "@/components/ui/user-avatar";
-import { useDeleteAccount } from "@/lib/queries";
+import { useDeleteAccount, useUserProfile } from "@/lib/queries";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { ApiError } from "@/lib/api";
@@ -76,6 +76,7 @@ function categorizeError(error: unknown): { message: string; isRecoverable: bool
 export function ManageAccountPage() {
   const navigate = useNavigate();
   const { data: session } = authClient.useSession();
+  const { data: userProfile } = useUserProfile(session?.user?.id || "");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [lastError, setLastError] = useState<{ message: string; isRecoverable: boolean } | null>(null);
   const deleteAccountMutation = useDeleteAccount();
@@ -149,6 +150,24 @@ export function ManageAccountPage() {
                 </div>
               </div>
             </div>
+
+            {/* Follower/Following Stats */}
+            {userProfile?.user && (
+              <div className="pt-4 border-t">
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="text-center p-3 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold">{userProfile.user.followerCount}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {userProfile.user.followerCount === 1 ? 'Follower' : 'Followers'}
+                    </div>
+                  </div>
+                  <div className="text-center p-3 bg-muted/50 rounded-lg">
+                    <div className="text-2xl font-bold">{userProfile.user.followingCount}</div>
+                    <div className="text-sm text-muted-foreground">Following</div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div className="pt-4 border-t">
               <div className="flex items-center text-sm text-muted-foreground">
