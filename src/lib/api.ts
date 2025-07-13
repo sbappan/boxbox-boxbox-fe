@@ -156,3 +156,217 @@ export async function deleteAccount(userId: string): Promise<void> {
     method: "DELETE",
   });
 }
+
+// Follow-related API functions
+export async function followUser(userId: string): Promise<{ message: string }> {
+  return apiRequest<{ message: string }>(`/api/users/${userId}/follow`, {
+    method: "POST",
+  });
+}
+
+export async function unfollowUser(userId: string): Promise<{ message: string }> {
+  return apiRequest<{ message: string }>(`/api/users/${userId}/follow`, {
+    method: "DELETE",
+  });
+}
+
+export async function fetchUserProfile(userId: string): Promise<{
+  user: {
+    id: string;
+    name: string;
+    email?: string;
+    image: string | null;
+    followerCount: number;
+    followingCount: number;
+    createdAt: string;
+    isFollowing: boolean;
+  };
+}> {
+  return apiRequest<{
+    user: {
+      id: string;
+      name: string;
+      email?: string;
+      image: string | null;
+      followerCount: number;
+      followingCount: number;
+      createdAt: string;
+      isFollowing: boolean;
+    };
+  }>(`/api/user/${userId}`);
+}
+
+export async function fetchFollowers(userId: string, page = 1, limit = 20): Promise<{
+  followers: Array<{
+    id: string;
+    name: string;
+    image: string | null;
+    followerCount: number;
+    isFollowing: boolean;
+  }>;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+}> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    followers: Array<{
+      id: string;
+      name: string;
+      image: string | null;
+      followerCount: number;
+      isFollowing: boolean;
+    }>;
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      hasMore: boolean;
+    };
+  }>(`/api/users/${userId}/followers?${params}`);
+}
+
+export async function fetchFollowing(userId: string, page = 1, limit = 20): Promise<{
+  following: Array<{
+    id: string;
+    name: string;
+    image: string | null;
+    followerCount: number;
+    isFollowing: boolean;
+  }>;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+}> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    following: Array<{
+      id: string;
+      name: string;
+      image: string | null;
+      followerCount: number;
+      isFollowing: boolean;
+    }>;
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      hasMore: boolean;
+    };
+  }>(`/api/users/${userId}/following?${params}`);
+}
+
+export async function fetchUserSuggestions(limit = 10): Promise<{
+  suggestions: Array<{
+    id: string;
+    name: string;
+    image: string | null;
+    followerCount: number;
+    isFollowing: boolean;
+  }>;
+}> {
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    suggestions: Array<{
+      id: string;
+      name: string;
+      image: string | null;
+      followerCount: number;
+      isFollowing: boolean;
+    }>;
+  }>(`/api/users/suggestions?${params}`);
+}
+
+export async function fetchTopReviewers(limit = 10): Promise<{
+  topReviewers: Array<{
+    id: string;
+    name: string;
+    image: string | null;
+    followerCount: number;
+    reviewCount: number;
+    averageRating: number;
+    isFollowing: boolean;
+  }>;
+}> {
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    topReviewers: Array<{
+      id: string;
+      name: string;
+      image: string | null;
+      followerCount: number;
+      reviewCount: number;
+      averageRating: number;
+      isFollowing: boolean;
+    }>;
+  }>(`/api/users/top-reviewers?${params}`);
+}
+
+export async function fetchFollowingFeed(page = 1, limit = 20): Promise<{
+  reviews: Array<{
+    id: string;
+    author: string;
+    authorId: string;
+    avatarUrl: string;
+    rating: number;
+    text: string;
+    date: string;
+    raceId: string;
+    raceName?: string;
+    likeCount: number;
+    isLikedByUser: boolean;
+  }>;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+}> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+  
+  return apiRequest<{
+    reviews: Array<{
+      id: string;
+      author: string;
+      authorId: string;
+      avatarUrl: string;
+      rating: number;
+      text: string;
+      date: string;
+      raceId: string;
+      raceName?: string;
+      likeCount: number;
+      isLikedByUser: boolean;
+    }>;
+    pagination: {
+      page: number;
+      limit: number;
+      total: number;
+      hasMore: boolean;
+    };
+  }>(`/api/feed/following?${params}`);
+}

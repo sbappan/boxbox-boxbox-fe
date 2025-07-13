@@ -3,6 +3,8 @@ import { useReviews, useRaces } from "@/lib/queries";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import ReviewListItem from "@/components/review-list-item";
+import { UserDiscovery } from "@/components/UserDiscovery";
+import { TopReviewers } from "@/components/TopReviewers";
 import type { Race } from "@/lib/types";
 
 export function DashboardPage() {
@@ -64,7 +66,7 @@ export function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-2xl p-4 space-y-8">
+      <div className="container mx-auto max-w-6xl p-4 space-y-8">
         <header>
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
             All Reviews
@@ -73,8 +75,16 @@ export function DashboardPage() {
             Loading reviews from all races...
           </p>
         </header>
-        <div className="flex justify-center items-center py-8">
-          <Loader2 className="animate-spin h-8 w-8" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <div className="flex justify-center items-center py-8">
+              <Loader2 className="animate-spin h-8 w-8" />
+            </div>
+          </div>
+          <div className="space-y-6">
+            <UserDiscovery limit={5} />
+            <TopReviewers limit={5} />
+          </div>
         </div>
       </div>
     );
@@ -82,7 +92,7 @@ export function DashboardPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto max-w-2xl p-4 space-y-8">
+      <div className="container mx-auto max-w-6xl p-4 space-y-8">
         <header>
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
             All Reviews
@@ -91,17 +101,25 @@ export function DashboardPage() {
             Browse reviews from all FORMULA 1 races
           </p>
         </header>
-        <Alert variant="destructive" data-testid="error-alert">
-          <AlertDescription>
-            Failed to load reviews. Please try refreshing the page.
-          </AlertDescription>
-        </Alert>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Alert variant="destructive" data-testid="error-alert">
+              <AlertDescription>
+                Failed to load reviews. Please try refreshing the page.
+              </AlertDescription>
+            </Alert>
+          </div>
+          <div className="space-y-6">
+            <UserDiscovery limit={5} />
+            <TopReviewers limit={5} />
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto max-w-2xl p-4 space-y-8">
+    <div className="container mx-auto max-w-6xl p-4 space-y-8">
       <header>
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
           All Reviews
@@ -111,21 +129,32 @@ export function DashboardPage() {
         </p>
       </header>
       
-      {reviewsWithRaceInfo.length === 0 ? (
-        <div className="flex justify-center items-center py-8">
-          <p className="text-muted-foreground">No reviews yet. Be the first to review a race!</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main content area */}
+        <div className="lg:col-span-2">
+          {reviewsWithRaceInfo.length === 0 ? (
+            <div className="flex justify-center items-center py-8">
+              <p className="text-muted-foreground">No reviews yet. Be the first to review a race!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {reviewsWithRaceInfo.map((review) => (
+                <ReviewListItem
+                  key={review.id}
+                  review={review}
+                  raceName={review.raceName}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="space-y-4">
-          {reviewsWithRaceInfo.map((review) => (
-            <ReviewListItem
-              key={review.id}
-              review={review}
-              raceName={review.raceName}
-            />
-          ))}
+
+        {/* Discovery sidebar */}
+        <div className="space-y-6">
+          <UserDiscovery limit={5} />
+          <TopReviewers limit={5} />
         </div>
-      )}
+      </div>
     </div>
   );
 }

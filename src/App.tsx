@@ -5,6 +5,10 @@ import { Footer } from "./components/layout/footer";
 import { ProtectedRoute } from "./components/protected-route";
 import GrandPrixReviewPage from "./components/grand-prix-review-page";
 import { ManageAccountPage } from "./components/manage-account-page";
+import { UserProfilePage } from "./components/user-profile-page";
+import { FollowersList } from "./components/followers-list";
+import { FollowingList } from "./components/following-list";
+import { FollowingFeed } from "./pages/FollowingFeed";
 import { Toaster } from "./components/ui/sonner";
 
 function App() {
@@ -28,6 +32,38 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ManageAccountPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/:userId"
+              element={
+                <ProtectedRoute>
+                  <UserProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/:userId/followers"
+              element={
+                <ProtectedRoute>
+                  <FollowersList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/:userId/following"
+              element={
+                <ProtectedRoute>
+                  <FollowingList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/following-feed"
+              element={
+                <ProtectedRoute>
+                  <FollowingFeed />
                 </ProtectedRoute>
               }
             />

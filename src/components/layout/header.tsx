@@ -43,6 +43,16 @@ export function Header() {
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to="/following-feed"
+                        className="font-bold px-3 py-2 rounded-md transition-all duration-200 hover:text-foreground hover:bg-accent/50"
+                      >
+                        Following
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
                     <NavigationMenuTrigger className="px-3 py-2 text-foreground/60">
                       2025
                     </NavigationMenuTrigger>
