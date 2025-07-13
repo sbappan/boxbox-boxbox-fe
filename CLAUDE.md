@@ -16,7 +16,7 @@ npm run test:ui    # Run Playwright tests with UI mode
 
 ## Architecture Overview
 
-This is a React + TypeScript frontend for a Formula 1 Grand Prix review application, using:
+This is a React + TypeScript frontend for a FORMULA 1 Grand Prix review application, using:
 - **Vite** as the build tool with SWC for fast compilation
 - **React Query (TanStack Query)** for server state management
 - **Better Auth** for authentication with OAuth support

@@ -82,7 +82,7 @@ test.describe('Dashboard Page', () => {
       const heading = page.getByRole('heading', { name: 'All Reviews' });
       await expect(heading).toBeVisible();
       
-      const subtitle = page.getByText('Browse reviews from all Formula 1 races');
+      const subtitle = page.getByText('Browse reviews from all FORMULA 1 races');
       await expect(subtitle).toBeVisible();
     });
 

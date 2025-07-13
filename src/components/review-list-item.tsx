@@ -1,7 +1,7 @@
 import React from "react";
 import type { Review } from "../lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { formatRelativeTime, formatHoverDate } from "@/lib/utils";
 import HeartIcon from "@/components/ui/heart-icon";
 import { useLikeReview } from "@/lib/queries";
@@ -52,17 +52,11 @@ const ReviewListItem = ({ review, raceName }: ReviewListItemProps) => {
   return (
     <Card data-testid="review-item">
       <CardHeader className="flex flex-row items-center gap-4">
-        <Avatar className="w-12 h-12">
-          <AvatarImage 
-            src={review.avatarUrl} 
-            alt={review.author}
-            referrerPolicy="no-referrer"
-            crossOrigin="anonymous"
-          />
-          {/* When the author's name is missing, use X as the fallback. */}
-          {/* Why X? - x is unknown - math nerd joke */}
-          <AvatarFallback>{review.author?.charAt(0)?.toUpperCase() || 'X'}</AvatarFallback>
-        </Avatar>
+        <UserAvatar 
+          name={review.author}
+          image={review.avatarUrl}
+          className="w-12 h-12"
+        />
         <div className="flex-1">
           <CardTitle>{review.author}</CardTitle>
           {raceName && review.raceId && (

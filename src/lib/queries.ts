@@ -9,6 +9,7 @@ import {
   deleteReview,
   likeReview,
   unlikeReview,
+  deleteAccount,
 } from "./api";
 
 // Query keys for consistent caching
@@ -178,6 +179,22 @@ export function useLikeReview() {
     onSettled: () => {
       // Always refetch after error or success
       queryClient.invalidateQueries({ queryKey: queryKeys.reviews });
+    },
+  });
+}
+
+// User mutations
+export function useDeleteAccount() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteAccount,
+    onSuccess: () => {
+      // Clear all cached data after account deletion
+      queryClient.clear();
+    },
+    onError: (error) => {
+      console.error("Failed to delete account:", error);
     },
   });
 }
